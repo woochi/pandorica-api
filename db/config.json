@@ -1,0 +1,6 @@
+{
+  "development": {
+    "host": "localhost",
+    "db": "pandorica_dev"
+  }
+}

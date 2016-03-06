@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  user: vagrant
+  sudo: True
+  vars_files:
+    - vars/defaults.yml
+
+  roles:
+    - dresden-weekly.Rails/ruby/rvm
+    - dresden-weekly.Rails/nginx/server
+    - dresden-weekly.Rails/nginx/puma
+    -
+
+  handlers:
+    - name: Restart puma
+      action: service name=puma state=restarted

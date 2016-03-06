@@ -1,0 +1,89 @@
+## webapp
+app_name: pandorica
+app_user: vagrant
+app_path: /data/pandorica
+app_domain: "{{ ansible_all_ipv4_addresses | last }}"
+site_id: pandorica
+
+ruby_version: 2.3.0
+
+vagrant_mount: '/vagrant'
+
+puma_direcotry: "{{ puma_directory }}"
+
+# Env variables
+
+app_secret_key_base: "{{ lookup('env', 'SECRET_KEY_BASE') | default('0edf6fdcbf610f5ad59c665d15deb17af10ff7b40e8a918f928771f885cfbdec', true) }}"
+
+rails_env: development
+rails_user_name: "{{ app_user }}"
+rails_user_bashrc_lines:
+  - "cd {{ RAILS_APP_BASE_PATH }} || true"
+  - "cd {{ RAILS_APP_CURRENT_PATH }} || true"
+rails_user_env:
+  RAILS_ENV: "{{ rails_env }}"
+  SECRET_KEY_BASE: "{{ app_secret_key_base }}"
+  RAILS_LOG_FILE_PATH: "{{ RAILS_APP_LOG_PATH }}"
+  DATABASE_URL: "postgresql://pandorica:pandorica@localhost/pandorica_dev"
+
+# RVM
+rvm1_rubies:
+  - 'ruby-2.3.0'
+rvm1_user: '{{app_user}}'
+rvm1_install_flags: '--auto-dotfiles --user-install'
+rvm1_install_path: '/home/{{app_user}}/.rvm'
+
+# Puma
+
+pumacorn_server: puma
+rails_deploy_app_name: "{{ app_name }}"
+rails_deploy_path: "{{ app_path }}"
+rails_deploy_user: "{{ app_user }}"
+rails_deploy_bundle: development
+
+# Database basic settings
+postgresql_version: 9.4
+postgresql_encoding: 'UTF-8'
+postgresql_locale: 'en_US.UTF-8'
+
+postgresql_admin_user: "postgres"
+postgresql_default_auth_method: "trust"
+
+postgresql_cluster_name: "main"
+postgresql_cluster_reset: false
+
+# List of users to be created (optional)
+postgresql_users:
+  - name: pandorica
+    pass: pandorica
+    encrypted: no       # denotes if the password is already encrypted.
+
+# List of databases to be created (optional)
+postgresql_databases:
+  - name: pandorica_test
+    hstore: yes         # flag to install the hstore extension on this database (yes/no)
+    uuid_ossp: yes      # flag to install the uuid-ossp extension on this database (yes/no)
+    citext: yes         # flag to install the citext extension on this database (yes/no)
+  - name: pandorica_dev
+    hstore: yes         # flag to install the hstore extension on this database (yes/no)
+    uuid_ossp: yes      # flag to install the uuid-ossp extension on this database (yes/no)
+    citext: yes         # flag to install the citext extension on this database (yes/no)
+  - name: pandorica
+    hstore: yes         # flag to install the hstore extension on this database (yes/no)
+    uuid_ossp: yes      # flag to install the uuid-ossp extension on this database (yes/no)
+    citext: yes         # flag to install the citext extension on this database (yes/no)
+
+# List of user privileges to be applied (optional)
+postgresql_user_privileges:
+  - name: pandorica             # user name
+    db: pandorica_test               # database
+    priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
+    role_attr_flags: "CREATEDB" # role attribute flags
+  - name: pandorica             # user name
+    db: pandorica_dev               # database
+    priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
+    role_attr_flags: "CREATEDB" # role attribute flags
+  - name: pandorica             # user name
+    db: pandorica               # database
+    priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
+    role_attr_flags: "CREATEDB" # role attribute flags
