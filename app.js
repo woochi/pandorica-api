@@ -14,8 +14,8 @@ const crypto = require('crypto');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var groups = require('./routes/groups');
 var tasks = require('./routes/tasks');
+var me = require('./routes/me');
 
 var app = express();
 
@@ -78,8 +78,8 @@ passport.deserializeUser(function(id, cb) {
 
 app.use('/', routes);
 app.use('/users', passport.authenticate('basic', {session: false}), users);
-app.use('/groups', passport.authenticate('basic', {session: false}), groups);
 app.use('/tasks', passport.authenticate('basic', {session: false}), tasks);
+app.use('/me', passport.authenticate('basic', {session: false}), me);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -97,6 +97,7 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
+    console.log(err);
     res.status(err.status || 500);
     res.json({
       message: err.message,

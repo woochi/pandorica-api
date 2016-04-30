@@ -26,17 +26,11 @@ router.post('/signup',
       }
 
       const newUser = new User(req.body);
-      Task.findOne({}, (err, task) => {
-        if (err) {return next(err)};
-        if (!task) {return next(new Error('No tasks found'))}
-
-        newUser.currentTask = task._id;
-        newUser.save(function(err, user) {
-          if (err) {
-            return next(err);
-          };
-          return res.json(200, user.populate('currentTask'));
-        });
+      newUser.save(function(err, user) {
+        if (err) {
+          return next(err);
+        };
+        return res.json(200, user);
       });
     });
   });

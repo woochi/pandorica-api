@@ -1,7 +1,7 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
 
-  config.vm.synced_folder ".", "/vagrant", :mount_options => ["fmode=666"]
+  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__args: ["--verbose", "--archive", "--delete", "-z", "--copy-links", "--no-perms"], rsync__exclude: [".git/", ".vagrant/", "system/vendor/", "node_modules/"], :mount_options => ["fmode=666"]
   config.ssh.insert_key = false
 
   config.vm.define "pandorica-api" do |pandorica|

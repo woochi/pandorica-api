@@ -1,3 +1,11 @@
+# Development
+
+Run the server with Babel CLI:
+
+```
+npm run dev
+```
+
 # Install dependencies
 
 ```
@@ -14,4 +22,11 @@ vagrant up
 
 ```
 ansible-playbook -i hosts ansible/deploy.yml
+```
+
+# Migrations
+
+```
+npm run migrate up
+npm run migrate down
 ```

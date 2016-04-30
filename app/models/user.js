@@ -5,23 +5,21 @@ const crypto = require('crypto');
 const _ = require('lodash');
 var Deferred = require("promised-io/promise").Deferred;
 var Task = mongoose.model('Task');
+import {ORDER, NEUTRAL, CHAOS} from './faction';
 
 function validatePresenceOf(value) {
   return value && value.length;
 }
 
-const ALIGNMENTS = {
-  values: 'neutral order chaos'.split(' '),
-  message: 'Invalid alignment type `{VALUE}`'
-};
+const FACTIONS = [ORDER, NEUTRAL, CHAOS];
 
 var UserSchema = new mongoose.Schema({
   name: {type: String, required: true},
   email: {type: String, required: true, unique: true},
-  alignment: {type: String, enum: ALIGNMENTS, required: true},
+  faction: {type: Array, enum: FACTIONS, required: true},
   hashedPassword: {type: String, select: false, required: true},
   salt: {type: String, select: false, required: true},
-  currentTask: {type: mongoose.Schema.Types.ObjectId, ref: 'Task', required: true}
+  completedTasks: {type: Array, default: []}
 });
 
 UserSchema.plugin(findOrCreate);
@@ -30,7 +28,7 @@ UserSchema.virtual('password').set(function(password) {
   this._password = password;
   this.salt = this.makeSalt();
   this.hashedPassword = this.encryptPassword(password);
-}).get(() => {
+}).get(function() {
   return this._password;
 });
 
@@ -42,7 +40,7 @@ UserSchema.path('hashedPassword').validate(function(hashedPassword) {
   return validator.isLength(hashedPassword, 4);
 }, 'Password is too short');
 
-UserSchema.pre('save', (next) => {
+UserSchema.pre('save', function(next) {
   if (!this.isNew) {
     return next();
   }
@@ -54,7 +52,7 @@ UserSchema.pre('save', (next) => {
 
 UserSchema.set('toJSON', {
   transform: function(user, data, options) {
-    return _.pick(user, ['name', 'email', 'alignment', 'currentTask']);
+    return _.pick(user, ['name', 'email', 'faction']);
   }
 });
 
@@ -75,26 +73,6 @@ UserSchema.methods = {
     } catch (err) {
       return "";
     }
-  },
-  getCurrentTask: function() {
-    var currentUser = this;
-    var deferred = new Deferred();
-    Task.findById(currentUser.currentTask, function(err, task) {
-      if (!task) {
-        Task.findOne().then(function(firstTask) {
-          if (!firstTask) {
-            deferred.reject(new Error('Could not find any tasks.'));
-          }
-          currentUser.currentTask = firstTask._id;
-          currentUser.save().then(function() {
-            deferred.resolve(firstTask);
-          }).catch(deferred.reject);
-        });
-      } else {
-        deferred.resolve(task);
-      }
-    })
-    return deferred;
   }
 }
 

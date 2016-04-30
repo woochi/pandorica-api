@@ -7,7 +7,7 @@ var TaskSchema = new mongoose.Schema({
   name: {type: String, required: true},
   description: {type: String, required: true},
   image: {type: Buffer},
-  code: {type: String, required: true},
+  code: {type: String, required: true, index: true, unique: true},
   points: {type: Number, required: true}
 });
 

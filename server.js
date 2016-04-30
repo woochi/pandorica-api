@@ -38,7 +38,7 @@ var server = http.createServer(app);
 
 function listen() {
   console.log('Starting up app on port', port);
-  server.listen(port);
+  server.listen(port, '0.0.0.0');
   server.on('error', onError);
   server.on('listening', onListening);
 }
@@ -51,7 +51,6 @@ function connectToDatabase() {
       }
     }
   };
-  console.log('Connecting to mongo at', config.db);
   return mongoose.connect(config.db, options).connection;
 }
 

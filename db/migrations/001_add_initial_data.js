@@ -1,6 +1,5 @@
 var mongo = require('mongodb');
 var _ = require('lodash');
-var qr = require('qr-image');
 var randomstring = require('randomstring');
 
 var initialTasks = [
@@ -19,11 +18,9 @@ var initialTasks = [
 exports.up = function(db, next) {
   var tasks = db.collection('tasks');
   initialTasks.map(function(task) {
-    var image = qr.imageSync(task.name, {type: 'svg'});
     return _.extend(task, {
-      image: image,
       code: randomstring.generate({
-        length: 5,
+        length: 6,
         charset: 'alphabetic',
         capitalization: 'lowercase'
       })
