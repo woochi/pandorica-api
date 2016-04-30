@@ -3,6 +3,8 @@ var findOrCreate = require('mongoose-findorcreate');
 const validator = require('validator');
 const crypto = require('crypto');
 const _ = require('lodash');
+var Deferred = require("promised-io/promise").Deferred;
+var Task = mongoose.model('Task');
 
 function validatePresenceOf(value) {
   return value && value.length;
@@ -18,7 +20,8 @@ var UserSchema = new mongoose.Schema({
   email: {type: String, required: true, unique: true},
   alignment: {type: String, enum: ALIGNMENTS, required: true},
   hashedPassword: {type: String, select: false, required: true},
-  salt: {type: String, select: false, required: true}
+  salt: {type: String, select: false, required: true},
+  currentTask: {type: mongoose.Schema.Types.ObjectId, ref: 'Task', required: true}
 });
 
 UserSchema.plugin(findOrCreate);
@@ -51,7 +54,7 @@ UserSchema.pre('save', (next) => {
 
 UserSchema.set('toJSON', {
   transform: function(user, data, options) {
-    return _.pick(user, ['name', 'email']);
+    return _.pick(user, ['name', 'email', 'alignment', 'currentTask']);
   }
 });
 
@@ -72,6 +75,26 @@ UserSchema.methods = {
     } catch (err) {
       return "";
     }
+  },
+  getCurrentTask: function() {
+    var currentUser = this;
+    var deferred = new Deferred();
+    Task.findById(currentUser.currentTask, function(err, task) {
+      if (!task) {
+        Task.findOne().then(function(firstTask) {
+          if (!firstTask) {
+            deferred.reject(new Error('Could not find any tasks.'));
+          }
+          currentUser.currentTask = firstTask._id;
+          currentUser.save().then(function() {
+            deferred.resolve(firstTask);
+          }).catch(deferred.reject);
+        });
+      } else {
+        deferred.resolve(task);
+      }
+    })
+    return deferred;
   }
 }
 

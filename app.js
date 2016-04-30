@@ -36,14 +36,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 passport.use(new BasicStrategy({
     usernameField: 'email'
   },
-  function(email, password, cb) {
-    console.log('AUTH', email, password);
+  function(email, password, next) {
     User.findOne({email: email}, '+hashedPassword +salt', function(err, user) {
-      console.log('FIND', err, user);
-      if (err) { return cb(err); }
-      if (!user) { return cb(null, false); }
-      if (!user.authenticate(password)) { return cb(null, false); }
-      return cb(null, user);
+      if (err) { return next(err); }
+      if (!user) {
+        var error = new Error('User not found');
+        error.status = 403;
+        return next(error);
+      }
+      if (!user.authenticate(password)) {
+        error.status = 403;
+        var error = new Error('Invalid credentials');
+        return next(error);
+      }
+      return next(null, user);
     });
   }));
 
@@ -51,9 +57,7 @@ passport.use(new LocalStrategy({
     usernameField: 'email'
   },
   function(email, password, cb) {
-    console.log('AUTH', email, password);
     User.findOne({email: email}, '+hashedPassword +salt', function(err, user) {
-      console.log('FIND', err, user);
       if (err) { return cb(err); }
       if (!user) { return cb(null, false); }
       if (!user.authenticate(password)) { return cb(null, false); }
@@ -62,12 +66,10 @@ passport.use(new LocalStrategy({
   }));
 
 passport.serializeUser(function(user, cb) {
-  console.log('SERIALIZE');
   cb(null, user.id);
 });
 
 passport.deserializeUser(function(id, cb) {
-  console.log('DESERIALIZE', id);
   User.findById(id, function (err, user) {
     if (err) { return cb(err); }
     cb(null, user);

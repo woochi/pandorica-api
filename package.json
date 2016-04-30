@@ -25,7 +25,9 @@
     "passport-google-token": "^0.1.2",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
+    "promised-io": "^0.3.5",
     "qr-image": "^3.1.0",
+    "randomstring": "^1.1.4",
     "serve-favicon": "~2.3.0",
     "validator": "^5.1.0"
   }
