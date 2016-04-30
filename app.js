@@ -16,6 +16,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var tasks = require('./routes/tasks');
 var me = require('./routes/me');
+import notifications from './routes/notifications';
 
 var app = express();
 
@@ -80,6 +81,7 @@ app.use('/', routes);
 app.use('/users', passport.authenticate('basic', {session: false}), users);
 app.use('/tasks', passport.authenticate('basic', {session: false}), tasks);
 app.use('/me', passport.authenticate('basic', {session: false}), me);
+app.use('/notifications', passport.authenticate('basic', {session: false}), notifications);
 
 app.use(passport.initialize());
 app.use(passport.session());

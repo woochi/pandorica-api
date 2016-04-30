@@ -4,20 +4,20 @@ var router = express.Router();
 var Notification = mongoose.model('Notification');
 
 router.param('id', function(req, res, next, id) {
-  Notification.findById(id)
-    .then(function(task) {
-      req.task = task;
-      next();
-    }, function(err) {
-      next(err)
-    });
+  Notification.findOneById(id).then(function(notification) {
+    if (!notification) {
+      next(new Error('Could not find the selected notification.'));
+    }
+    req.task = task;
+    next();
+  }, next);
 });
 
 router.route('/')
   .get(function(req, res, next) {
-    Notification.find({}).then(function(tasks) {
+    Notification.find({}).limit(40).then(function(tasks) {
       res.json(tasks);
-    });
+    }, next);
   });
 
 router.route('/:id')
