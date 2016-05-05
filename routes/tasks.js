@@ -45,6 +45,11 @@ router.route('/')
       });
   });
 
+router.route('/:id')
+  .get(function(req, res, next) {
+    res.json(req.task);
+  })
+
 router.route('/:id/qr')
   .get(function(req, res, next) {
     try {

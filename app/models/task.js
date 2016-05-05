@@ -20,7 +20,7 @@ TaskSchema.pre('save',  function(task, next) {
 
 TaskSchema.set('toJSON', {
   transform: function(task, data, options) {
-    return _.pick(task, ['_id', 'name', 'description']);
+    return _.pick(task, ['_id', 'name', 'description', 'points']);
   }
 });
 

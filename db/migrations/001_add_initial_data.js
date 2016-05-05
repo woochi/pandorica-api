@@ -20,7 +20,7 @@ var initialTasks = [
 var initialNotifications = [
   {
     type: TASK,
-    title: 'Learn about the mystics of Nepal',
+    title: 'The Mystics of Nepal',
     message: 'The mystics of Nepal. Listen to the lecture in the auditorium and collect your completion code after the event from the lecturer.'
   },
   {
@@ -45,7 +45,7 @@ var initialNotifications = [
   },
   {
     type: TASK,
-    title: 'Learn about the mystics of Nepal',
+    title: 'The Mystics of Nepal',
     message: 'The mystics of Nepal. Listen to the lecture in the auditorium and collect your completion code after the event from the lecturer.'
   },
   {
@@ -73,11 +73,19 @@ exports.up = function(db, next) {
   });
   tasks.insert(initialTasks, next);
 
-  var notifications = db.collection('notifications');
-  notifications.insert(initialNotifications);
+  tasks.findOne().then((task) => {
+    var notifications = db.collection('notifications');
+    notifications.insert(initialNotifications.map((notification) => {
+      return _.extend({}, notification, {task: task._id});
+    }));
+  });
 }
 
 exports.down = function(db, next) {
   var tasks = db.collection('tasks');
-  tasks.remove({}, next);
+  var notifications = db.collection('notifications');
+
+  tasks.remove({}).then(function() {
+    notifications.remove({}, next);
+  }, next);
 }
