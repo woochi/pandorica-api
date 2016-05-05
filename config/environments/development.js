@@ -1,4 +1,4 @@
 module.exports = {
-  port: 8081,
+  port: 35005,
   db: 'mongodb://localhost/pandorica_dev'
 };
