@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon server.js --exec babel-node",
-    "build": "babel ./server.js --out-file ./server-production.js",
-    "serve": "node ./server-production.js",
-    "migrate": "node ./node_modules/mongodb-migrate -runmm -c ./db -cfg ./config.json -dbn development"
+    "start": "nodemon ./src/server.js --exec babel-node",
+    "build": "babel ./src -d ./dist",
+    "serve": "node ./dist/server.js",
+    "migrate": "node ./node_modules/mongodb-migrate -runmm -c ./db -cfg ./src/config.json -dbn development"
   },
   "dependencies": {
     "babel-cli": "^6.4.5",

@@ -14,3 +14,5 @@
 /node_modules
 .vagrant
 npm-debug.log
+.DS_Store
+/dist

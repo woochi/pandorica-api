@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 const passport = require('passport');
 const Task = mongoose.model('Task');
 import _ from 'lodash';
-import {factions} from '../app/models/faction';
+import {factions} from '../models/faction';
 
 router.route('/')
   .get(function(req, res, next) {

@@ -1,9 +1,0 @@
----
-- name: Install required packages for bundles
-  action: apt pkg={{item}} state=present
-  with_items:
-    - build-essential
-    - libpq-dev
-    - postgresql-client
-    - postgresql-contrib
-    - postgresql-server-dev-{{postgresql_version}}

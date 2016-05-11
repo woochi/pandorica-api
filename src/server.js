@@ -10,9 +10,9 @@ var path = require('path');
 var fs = require('fs');
 var mongoose = require('mongoose');
 const env = process.env.NODE_ENV || 'development';
-var config = require('./config/environments/' + process.env.NODE_ENV);
+var config = require('./config/environments/' + env);
 
-var models = path.join(__dirname, 'app/models');
+var models = path.join(__dirname, 'models');
 
 // Bootstrap models
 fs.readdirSync(models)
