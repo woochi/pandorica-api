@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=development nodemon server.js --exec babel-node",
+    "start": "nodemon server.js --exec babel-node",
     "build": "babel ./server.js --out-file ./server-production.js",
-    "serve": "NODE_ENV=production node ./server-production.js",
+    "serve": "node ./server-production.js",
     "migrate": "node ./node_modules/mongodb-migrate -runmm -c ./db -cfg ./config.json -dbn development"
   },
   "dependencies": {

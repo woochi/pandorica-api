@@ -2,5 +2,9 @@
   "development": {
     "host": "localhost",
     "db": "pandorica_dev"
+  },
+  "production": {
+    "host": "localhost",
+    "db": "pandorica"
   }
 }
