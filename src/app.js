@@ -11,6 +11,7 @@ var User = mongoose.model('User');
 const LocalStrategy = require('passport-local').Strategy;
 const BasicStrategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
+import compression from 'compression';
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -30,6 +31,7 @@ app.use(logger('dev'));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(compression());
 //app.use(cookieParser());
 //app.use(express.static(path.join(__dirname, 'public')));
 
