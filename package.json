@@ -5,8 +5,8 @@
   "scripts": {
     "start": "nodemon ./src/server.js --exec babel-node",
     "build": "babel ./src -d ./dist",
-    "serve": "npm build && forever start ./dist/server.js",
-    "migrate": "node ./node_modules/mongodb-migrate -runmm -c ./db -cfg ./src/config.json -dbn development"
+    "serve": "NODE_ENV=$NODE_ENV forever start ./dist/server.js",
+    "migrate": "node ./node_modules/mongodb-migrate -runmm -c ./db -cfg ./src/config.json -dbn $NODE_ENV"
   },
   "dependencies": {
     "babel-cli": "^6.4.5",

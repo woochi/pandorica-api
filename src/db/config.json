@@ -5,6 +5,8 @@
   },
   "production": {
     "host": "localhost",
-    "db": "pandorica"
+    "db": "pandorica",
+    "user": "pandorica",
+    "pass": "ZFpr9qncqOSYnUN1RSg62B"
   }
 }
