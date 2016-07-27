@@ -3,6 +3,8 @@ var mongoose = require('mongoose');
 var router = express.Router();
 var Notification = mongoose.model('Notification');
 import _ from 'lodash';
+import {requireAdmin} from '../middleware/auth';
+import error from 'http-errors';
 
 function getUserTask(task, user) {
   if (_.find(user.completedTasks, task._id)) {
@@ -34,6 +36,15 @@ router.route('/')
       })
       res.json(notifications);
     }, next);
+  })
+  .post(requireAdmin, function(req, res, next) {
+    const notification = new Notification(req.body);
+    notification.save((err) => {
+      if (err) {
+        next(error(400, err));
+      }
+      res.json(notification);
+    });
   });
 
 router.route('/:id')

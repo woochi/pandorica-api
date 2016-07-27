@@ -11,6 +11,7 @@ var fs = require('fs');
 var mongoose = require('mongoose');
 const env = process.env.NODE_ENV || 'development';
 var config = require('./config/environments/' + env);
+import {createApp, configureApp} from './app';
 
 var models = path.join(__dirname, 'models');
 
@@ -23,7 +24,7 @@ fs.readdirSync(models)
  * Get port from environment and store in Express.
  */
 
-var app = require('./app');
+var app = createApp();
 var port = normalizePort(config.port || process.env.PORT || '3000');
 app.set('port', port);
 
@@ -31,7 +32,11 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+import createSocket from 'socket.io';
+
+const server = http.createServer(app);
+const socket = createSocket(server);
+configureApp(app, socket);
 
 /**
  * Listen on provided port, on all network interfaces.

@@ -11,9 +11,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login',
-  passport.authenticate('local', {session: false}),
-  (req, res, next) => {
-    return res.send(200, req.user);
+  passport.authenticate('local', {session: false}), (req, res, next) => {
+    return res.json(req.user);
   });
 
 router.post('/signup',
@@ -22,7 +21,7 @@ router.post('/signup',
     User.findOne({'email': email}, (err, user) => {
       if (err) { return next(err); }
       if (user) {
-        return res.json(400, {error: 'Email already taken'});
+        return next(error(400, 'Email already taken'));
       }
 
       const newUser = new User(req.body);
@@ -30,7 +29,7 @@ router.post('/signup',
         if (err) {
           return next(err);
         };
-        return res.json(200, user);
+        return res.json(user);
       });
     });
   });

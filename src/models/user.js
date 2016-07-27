@@ -16,10 +16,11 @@ const FACTIONS = [ORDER, NEUTRAL, CHAOS];
 var UserSchema = new mongoose.Schema({
   name: {type: String, required: true},
   email: {type: String, required: true, unique: true},
-  faction: {type: Array, enum: FACTIONS, required: true},
+  faction: {type: String, enum: FACTIONS, required: true},
   hashedPassword: {type: String, select: false, required: true},
   salt: {type: String, select: false, required: true},
-  completedTasks: {type: Array, default: []}
+  completedTasks: {type: Array, default: []},
+  admin: {type: Boolean, default: false}
 });
 
 UserSchema.plugin(findOrCreate);
@@ -52,7 +53,7 @@ UserSchema.pre('save', function(next) {
 
 UserSchema.set('toJSON', {
   transform: function(user, data, options) {
-    return _.pick(user, ['name', 'email', 'faction']);
+    return _.pick(user, ['name', 'email', 'faction', 'admin']);
   }
 });
 

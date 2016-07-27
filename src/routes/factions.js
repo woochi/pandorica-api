@@ -1,26 +1,51 @@
 var express = require('express');
-var router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
-import {factions} from '../app/models/faction';
+const User = mongoose.model('User');
+const Message = mongoose.model('Message');
+import {NEUTRAL, factions} from '../models/faction';
+import error from 'http-errors';
 
-router.route('/')
-  .get(function(req, res, next) {
-    res.json(factions);
+module.exports = (socket) => {
+  var router = express.Router();
+
+  router.param('faction', (req, res, next, faction) => {
+    if (faction === 'global') {
+      req.faction === NEUTRAL;
+    } else {
+      const factionKey = faction.toUpperCase();
+      if (!factions[factionKey]) {
+        next(error(404, `${faction} is not a valid faction`));
+      }
+      req.faction = factionKey;
+      next();
+    }
   });
 
-router.route('/:id')
-  .get(function(req, res, next, id) {
-    res.json(factions[id]);
-  });
-
-router.route('/:id/users')
-  .get(function(req, res, next, id) {
-    return User.find({faction: id}).sort({points: -1}).limit(10)
-      .then(function(users) {
-        res.json(users);
+  router.route('/:faction/messages')
+    .all((req, res, next) => {
+      if (![req.user.faction, NEUTRAL].includes(req.faction)) {
+        next(error(401, 'You do not have access to this faction\'s discussions.'));
+      }
+      next();
+    })
+    .get((req, res, next) => {
+      Message.find({faction: req.faction}).populate('user').then((messages) => {
+        res.json(messages);
       });
-  });
+    })
+    .post((req, res, next) => {
+      const message = new Message({
+        user: req.user._id,
+        faction: req.faction,
+        content: req.body.content
+      });
+      message.save().then((savedMessage) => {
+        const messageData = {...savedMessage.toObject(), user: req.user.toJSON()};
+        res.json(messageData);
+        socket.emit('message', messageData);
+      });
+    });
 
-module.exports = router;
-
+  return router;
+};

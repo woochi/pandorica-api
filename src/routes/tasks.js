@@ -4,6 +4,7 @@ var router = express.Router();
 var Task = mongoose.model('Task');
 var _ = require('lodash');
 var qr = require('qr-image');
+import {requireAdmin} from '../middleware/auth';
 
 router.param('id', function(req, res, next, id) {
   Task.findById(id)
@@ -16,14 +17,13 @@ router.param('id', function(req, res, next, id) {
 });
 
 router.route('/')
-  .get(function(req, res, next) {
-    Task.find()
-      .then(function(tasks) {
-        res.send(tasks);
-      })
-      .catch(function(error) {
-        res.json(error);
-      });
+  .get(requireAdmin, function(req, res, next) {
+    Task.find({}, (err, tasks) => {
+      if (err) {
+        res.sendStatus(500);
+      }
+      res.send(tasks);
+    });
   })
   .post(function(req, res, next) {
     var task = new Task(req.body);
