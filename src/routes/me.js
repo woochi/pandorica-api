@@ -9,6 +9,11 @@ import {factions} from '../models/faction';
 router.route('/')
   .get(function(req, res, next) {
     res.json(req.user);
+  })
+  .put((req, res, next) => {
+    req.user.update(req.body).then(() => {
+      return res.json({...req.user.toJSON(), ...req.body});
+    }, next);
   });
 
 router.route('/tasks')

@@ -53,7 +53,7 @@ UserSchema.pre('save', function(next) {
 
 UserSchema.set('toJSON', {
   transform: function(user, data, options) {
-    return _.pick(user, ['name', 'email', 'faction', 'admin']);
+    return _.pick(user, ['_id', 'name', 'email', 'faction', 'admin']);
   }
 });
 
