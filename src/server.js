@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
+import "babel-polyfill";
 
 var debug = require('debug')('pandorica-api:server');
 var http = require('http');
