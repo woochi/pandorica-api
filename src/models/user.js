@@ -34,10 +34,12 @@ UserSchema.virtual('password').set(function(password) {
 });
 
 UserSchema.path('email').validate(function(email) {
+  console.log('VALIDATE EMAIL', email);
   return validator.isEmail(email);
 }, 'Invalid email');
 
 UserSchema.path('hashedPassword').validate(function(hashedPassword) {
+  console.log('VALIDATE', hashedPassword);
   return validator.isLength(hashedPassword, 4);
 }, 'Password is too short');
 
