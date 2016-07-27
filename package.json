@@ -5,9 +5,9 @@
   "scripts": {
     "start": "nodemon ./src/server.js --exec babel-node",
     "build": "babel ./src -d ./dist",
-    "serve": "forever start ./dist/server.js",
+    "serve": "NODE_ENV=production forever start ./dist/server.js",
     "migrate": "node ./node_modules/mongodb-migrate -runmm -c ./src/db -cfg ./config.json -dbn $NODE_ENV",
-    "restart": "forever restart ./dist/server.js"
+    "restart": "NODE_ENV=production forever restart ./dist/server.js"
   },
   "dependencies": {
     "api-error-handler": "^1.0.0",

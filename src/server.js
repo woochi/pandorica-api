@@ -41,7 +41,7 @@ configureApp(app, socket);
  */
 
 function listen() {
-  console.log('Starting up app on port', port);
+  console.log('Starting up app on port', port, 'in', env);
   server.listen(port, '0.0.0.0');
   server.on('error', onError);
   server.on('listening', onListening);
