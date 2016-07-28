@@ -6,6 +6,7 @@ var Quest = mongoose.model('Quest');
 import _ from 'lodash';
 import {requireAdmin} from '../middleware/auth';
 import error from 'http-errors';
+import {NEUTRAL} from '../models/faction';
 
 function getUserQuest(quest, user) {
   if (user.usedCodes.includes(quest.code)) {
@@ -26,7 +27,7 @@ router.param('id', function(req, res, next, id) {
 
 router.route('/')
   .get(function(req, res, next) {
-    Quest.find().populate('task').limit(40).lean().then(function(quests) {
+    Quest.find({faction: {$in: [req.user.faction, NEUTRAL]}}).lean().then(function(quests) {
       const userQuests = quests.map((quest) => {
         return getUserQuest(quest, req.user);
       })
@@ -48,11 +49,8 @@ router.route('/:id')
     res.json(req.quest);
   })
   .post((req, res, next) => {
-    console.log('SUBMIT', req.user, req.body.code, req.quest.code);
     if (req.body.code === req.quest.code) {
-      console.log('CALL COMPLETE', User.complete, req.user.complete);
       req.user.complete(req.quest, (err, user) => {
-        console.log('DONE', err, user);
         if (err) {
           return next(err)
         }
