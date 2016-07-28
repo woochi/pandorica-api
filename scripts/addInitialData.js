@@ -13,6 +13,8 @@ var initialTasks = []
   .concat(Array(70).fill().map(() => { return {points: 150}; }))
   .concat(Array(26).fill().map(() => { return {points: 170}; }))
   .concat(Array(17).fill().map(() => { return {points: 180}; }))
+  .concat(Array(15).fill().map(() => { return {points: 250}; })) // Nörttitytöt, kokemuspiste
+  .concat(Array(2).fill().map(() => { return {points: 300}; })) // KPS, Skenukisa
   .map((task) => {
     return _.extend({}, task, {code: generateCode()});
   });
