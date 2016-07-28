@@ -5,21 +5,19 @@ const crypto = require('crypto');
 const _ = require('lodash');
 var Deferred = require("promised-io/promise").Deferred;
 var Task = mongoose.model('Task');
-import {ORDER, NEUTRAL, CHAOS} from './faction';
+import faction from './fields/faction';
 
 function validatePresenceOf(value) {
   return value && value.length;
 }
 
-const FACTIONS = [ORDER, NEUTRAL, CHAOS];
-
 var UserSchema = new mongoose.Schema({
   name: {type: String, required: true},
   email: {type: String, required: true, unique: true},
-  faction: {type: String, enum: FACTIONS, required: true},
+  faction: faction,
   hashedPassword: {type: String, select: false, required: true},
   salt: {type: String, select: false, required: true},
-  completedTasks: {type: Array, default: []},
+  usedCodes: {type: Array, default: []},
   admin: {type: Boolean, default: false}
 });
 

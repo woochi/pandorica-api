@@ -1,7 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
-var Notification = mongoose.model('Notification');
+var Quest = mongoose.model('Quest');
 import _ from 'lodash';
 import {requireAdmin} from '../middleware/auth';
 import error from 'http-errors';
@@ -14,7 +14,7 @@ function getUserTask(task, user) {
 }
 
 router.param('id', function(req, res, next, id) {
-  Notification.findById(id).populate('task').lean().then(function(notification) {
+  Quest.findById(id).populate('task').lean().then(function(notification) {
     if (!notification) {
       next(new Error('Could not find the selected notification.'));
     }

@@ -24,7 +24,7 @@ export function configureApp(app, socket) {
   var tasks = require('./routes/tasks');
   var me = require('./routes/me');
   var factions = require('./routes/factions');
-  var notifications = require('./routes/notifications');
+  var quests = require('./routes/quests');
 
   app.use(logger('dev'));
   app.use(cors());
@@ -80,7 +80,7 @@ export function configureApp(app, socket) {
   app.use('/users', passport.authenticate('basic', {session: false}), users);
   app.use('/tasks', passport.authenticate('basic', {session: false}), tasks);
   app.use('/me', passport.authenticate('basic', {session: false}), me);
-  app.use('/notifications', passport.authenticate('basic', {session: false}), notifications);
+  app.use('/quests', passport.authenticate('basic', {session: false}), quests);
   app.use('/factions', passport.authenticate('basic', {session: false}), factions(socket));
 
   app.use(passport.initialize());
