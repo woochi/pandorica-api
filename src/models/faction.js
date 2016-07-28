@@ -1,3 +1,14 @@
+var mongoose = require('mongoose');
+
+var FactionSchema = new mongoose.Schema({
+  name: {type: String, required: true},
+  points: {type: Number, required: true, default: 0}
+});
+
+mongoose.model('Faction', FactionSchema);
+
+// Legacy
+
 class Faction {
   constructor(type, name, description) {
     this.name = name;

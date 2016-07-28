@@ -5,7 +5,10 @@ const crypto = require('crypto');
 const _ = require('lodash');
 var Deferred = require("promised-io/promise").Deferred;
 var Task = mongoose.model('Task');
+var Faction = mongoose.model('Faction');
 import faction from './fields/faction';
+import error from 'http-errors';
+import {NEUTRAL} from './faction';
 
 function validatePresenceOf(value) {
   return value && value.length;
@@ -69,6 +72,25 @@ UserSchema.methods = {
     } catch (err) {
       return "";
     }
+  },
+  complete: function(mission, next) {
+    if (mission.faction && mission.faction !== NEUTRAL && mission.faction !== this.faction) {
+      return next(error(400, 'This quest is not for your faction.'), null);
+    }
+    if (this.usedCodes.includes(mission.code)) {
+      return next(error(400, 'You have already completed this quest.'), null);
+    }
+
+    // Looks OK
+    this.usedCodes.push(mission.code);
+    this.points = this.points + mission.points;
+
+    Faction.update({name: this.faction}, {$inc: {points: mission.points}}, (err, faction) => {
+      if (err) {
+        return next(err, null);
+      }
+      this.save(next);
+    });
   }
 }
 

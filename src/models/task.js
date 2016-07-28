@@ -10,7 +10,7 @@ var TaskSchema = new mongoose.Schema({
 
 TaskSchema.set('toJSON', {
   transform: function(task, data, options) {
-    return _.pick(task, ['_id', 'name', 'description', 'points']);
+    return _.pick(task, ['_id', 'points']);
   }
 });
 

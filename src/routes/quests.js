@@ -1,55 +1,66 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
+var User = mongoose.model('User');
 var Quest = mongoose.model('Quest');
 import _ from 'lodash';
 import {requireAdmin} from '../middleware/auth';
 import error from 'http-errors';
 
-function getUserTask(task, user) {
-  if (_.find(user.completedTasks, task._id)) {
-    task.completed = true;
+function getUserQuest(quest, user) {
+  if (user.usedCodes.includes(quest.code)) {
+    quest.completed = true;
   }
-  return task;
+  return quest;
 }
 
 router.param('id', function(req, res, next, id) {
-  Quest.findById(id).populate('task').lean().then(function(notification) {
-    if (!notification) {
-      next(new Error('Could not find the selected notification.'));
+  Quest.findById(id).lean().then(function(quest) {
+    if (!quest) {
+      next(error(400, 'Could not find the selected quest'));
     }
-    if (notification.task) {
-      notification.task = getUserTask(notification.task, req.user);
-    }
-    req.notification = notification;
+    req.quest = getUserQuest(quest, req.user);
     next();
   }, next);
 });
 
 router.route('/')
   .get(function(req, res, next) {
-    Notification.find().populate('task').limit(40).lean().then(function(notifications) {
-      notifications.forEach((notification) => {
-        if (notification.task) {
-          notification.task = getUserTask(notification.task, req.user);
-        }
+    Quest.find().populate('task').limit(40).lean().then(function(quests) {
+      const userQuests = quests.map((quest) => {
+        return getUserQuest(quest, req.user);
       })
-      res.json(notifications);
+      res.json(userQuests);
     }, next);
   })
   .post(requireAdmin, function(req, res, next) {
-    const notification = new Notification(req.body);
-    notification.save((err) => {
+    const quest = new Quest(req.body);
+    quest.save((err) => {
       if (err) {
         next(error(400, err));
       }
-      res.json(notification);
+      res.json(quest);
     });
   });
 
 router.route('/:id')
   .get(function(req, res, next) {
-    res.json(req.notification);
+    res.json(req.quest);
+  })
+  .post((req, res, next) => {
+    console.log('SUBMIT', req.user, req.body.code, req.quest.code);
+    if (req.body.code === req.quest.code) {
+      console.log('CALL COMPLETE', User.complete, req.user.complete);
+      req.user.complete(req.quest, (err, user) => {
+        console.log('DONE', err, user);
+        if (err) {
+          return next(err)
+        }
+        res.json(getUserQuest(req.quest, user));
+      });
+    } else {
+      next(error(400, 'Wrong quest code.'));
+    }
   });
 
 module.exports = router;

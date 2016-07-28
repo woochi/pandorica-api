@@ -14,4 +14,10 @@ var QuestSchema = new mongoose.Schema({
   faction: faction
 });
 
+QuestSchema.set('toJSON', {
+  transform: function(task, data, options) {
+    return _.pick(task, ['_id', 'title', 'description', 'faction']);
+  }
+});
+
 mongoose.model('Quest', QuestSchema);
