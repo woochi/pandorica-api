@@ -6,8 +6,9 @@
     "start": "nodemon ./src/server.js --exec babel-node",
     "build": "babel ./src -d ./dist",
     "serve": "NODE_ENV=production forever start ./dist/server.js",
-    "migrate": "babel-node ./scripts/addInitialData.js",
-    "restart": "NODE_ENV=production forever restart ./dist/server.js"
+    "migrate": "NODE_ENV=production babel-node ./scripts/addInitialData.js",
+    "restart": "NODE_ENV=production forever restart ./dist/server.js",
+    "export": "NODE_ENV=production babel-node scripts/export.js"
   },
   "dependencies": {
     "api-error-handler": "^1.0.0",
