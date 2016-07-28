@@ -17,7 +17,7 @@ const handleError = (err) => {
 
 console.log('Exporting quests...')
 Quest.find({}).then((quests) => {
-  quests.forEach((quest) => {
+  quests.forEach((quest, i) => {
     const imageStream = qr.image(`https://app.ropecon.fi/app/quests/${String(quest._id)}?code=${quest.code}`, {
       type: 'png',
       size: 8
@@ -40,8 +40,7 @@ Quest.find({}).then((quests) => {
     })
 
     mkdirp('./tmp/quests', (err) => {
-      console.log('AFTER', err);
-      image.write(`tmp/quests/${quest.title}.png`, (error) => {
+      image.write(`tmp/quests/${i}_${quest.title}.png`, (error) => {
         if (error) {
           console.log(error);
           return;

@@ -87,15 +87,15 @@ var neutralQuests = [
 
 const orderQuests = [
   {
-    title: 'True Colours',
+    title: 'True Colours of Order',
     description: 'Declare yourself to be part of the Guardians of Order by painting Order-related art on your skin and showing it at the Larp-desk.'
   },
   {
-    title: 'Badge of Honour',
+    title: 'Badge of Order',
     description: 'Show where you stand by obtaining or creating an Order badge for yourself. Claim your reward at the Larp desk.'
   },
   {
-    title: 'Guild Moment',
+    title: 'Guild Moment: Order',
     description: 'Immortalize a moment by taking a photo of yourself with someone dressed as a hero and sharing it on Instagram with the hashtag #RoRorder. Report then to the Larp-desk.'
   },
   {
@@ -111,7 +111,7 @@ const orderQuests = [
     description: 'Pay your respect for one of the honorable Guests of Honor and take a picture with him. You may share it with the hashtag #RoRorder and/or #ropecon.'
   },
   {
-    title: 'Boss Fight!',
+    title: 'Order: Boss Fight!',
     description: 'It is time for the final showdown. An unholy champion of Chaos has spawned in the Hall 5\'s boffer area. Defeat the champion in a boffer match (or cheer others on) and let the Order rule Ropecon!'
   }
 ].map((quest) => {
@@ -120,15 +120,15 @@ const orderQuests = [
 
 const chaosQuests = [
   {
-    title: 'True Colours',
+    title: 'True Colours of Chaos',
     description: 'Declare yourself to be part of Chaos by painting a Chaos-related art on your skin and showing it at the Larp desk.'
   },
   {
-    title: 'Badge of Honour',
+    title: 'Badge of Chaos',
     description: 'Show where you stand by obtaining or creating a Chaos badge for yourself. Claim your reward at the Larp-desk.'
   },
   {
-    title: 'Guild Moment',
+    title: 'Guild Moment: Chaos',
     description: 'Immortalize a moment by taking a photo of yourself with someone dressed as a villain and sharing it on Instagram with the hashtag #RoRchaos. Report then to the Larp desk.'
   },
   {
@@ -144,7 +144,7 @@ const chaosQuests = [
     description: 'Pay your respect for one of the honorable Guests of Honor and take a picture with him. You may share it with the hashtag #RoRorder and/or #ropecon.'
   },
   {
-    title: 'Boss Fight!',
+    title: 'Chaos: Boss Fight!',
     description: 'Our victory is at hand! A disgusting champion of Order has spawned in the Hall 5\'s boffer area. Defeat the champion and it\'s minions in a boffer match (or cheer others on) and claim Ropecon for the Chaos!'
   }
 ].map((quest) => {
