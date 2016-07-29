@@ -3,6 +3,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Message = mongoose.model('Message');
+const Faction = mongoose.model('Faction');
 import {NEUTRAL, factions} from '../models/faction';
 import error from 'http-errors';
 
@@ -21,6 +22,13 @@ module.exports = (socket) => {
       next();
     }
   });
+
+  router.route('/')
+    .get((req, res, next) => {
+      Faction.find().then((factions) => {
+        res.json(factions);
+      }, next);
+    });
 
   router.route('/:faction/messages')
     .all((req, res, next) => {

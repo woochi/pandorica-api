@@ -9,7 +9,11 @@ import error from 'http-errors';
 
 router.route('/')
   .get(function(req, res, next) {
-    res.json(req.user);
+    res.json({
+      ...req.user.toJSON(),
+      points: req.user.points,
+      completedQuests: req.user.usedCodes.length
+    });
   })
   .put((req, res, next) => {
     req.user.update(req.body).then(() => {

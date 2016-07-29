@@ -21,7 +21,8 @@ var UserSchema = new mongoose.Schema({
   hashedPassword: {type: String, select: false, required: true},
   salt: {type: String, select: false, required: true},
   usedCodes: {type: Array, default: []},
-  admin: {type: Boolean, default: false}
+  admin: {type: Boolean, default: false},
+  points: {type: Number, required: true, default: 0}
 });
 
 UserSchema.plugin(findOrCreate);
