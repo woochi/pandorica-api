@@ -4,6 +4,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Task = mongoose.model('Task');
+import error from 'http-errors';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -17,7 +18,6 @@ router.post('/login',
 
 router.post('/signup',
   function(req, res, next) {
-    console.log('SINGUP', req.body);
     const email = req.body.email;
     User.findOne({'email': email}, (err, user) => {
       if (err) { return next(err); }
