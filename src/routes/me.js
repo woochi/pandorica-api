@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 const passport = require('passport');
 const Task = mongoose.model('Task');
 import _ from 'lodash';
-import {factions} from '../models/faction';
+import {factions, NEUTRAL} from '../models/faction';
 import error from 'http-errors';
 
 router.route('/')
@@ -24,21 +24,37 @@ router.route('/')
 router.route('/tasks')
   .post(function(req, res, next) {
     var code = req.body.code;
-    Task.findOne({code: req.body.code})
-      .then(function(task) {
-        var error;
-        if (!task) {
-          return next(error(403, 'The code was wrong.'));
-        }
 
-        req.user.complete(task, (err, user) => {
-          if (err) {
-            return next(err);
+    if (code === '12345') {
+      const introMission = {
+        _id: '12345',
+        code: '12345',
+        points: 200,
+        faction: NEUTRAL
+      };
+      req.user.complete(introMission, (err, user) => {
+        if (err) {
+          return next(err);
+        }
+        res.json({...introMission, completed: true});
+      });
+    } else {
+      Task.findOne({code: req.body.code})
+        .then(function(task) {
+          var error;
+          if (!task) {
+            return next(error(403, 'The code was wrong.'));
           }
-          console.log('COMPLETED', task);
-          res.json({...task.toJSON(), completed: true});
-        });
-      }, next);
+
+          req.user.complete(task, (err, user) => {
+            if (err) {
+              return next(err);
+            }
+            console.log('COMPLETED', task);
+            res.json({...task.toJSON(), completed: true});
+          });
+        }, next);
+    }
   });
 
 module.exports = router;
