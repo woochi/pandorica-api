@@ -4,6 +4,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Task = mongoose.model('Task');
+const Faction = mongoose.model('Faction');
 import error from 'http-errors';
 
 /* GET home page. */
@@ -30,7 +31,13 @@ router.post('/signup',
         if (err) {
           return next(err);
         };
-        return res.json(user);
+
+        Faction.update({name: user.faction}, {$inc: {points: 50}}, (err, faction) => {
+          if (err) {
+            return next(err);
+          }
+          res.json(user);
+        });
       });
     });
   });
