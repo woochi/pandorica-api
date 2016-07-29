@@ -41,16 +41,14 @@ router.route('/tasks')
     } else {
       Task.findOne({code: req.body.code})
         .then(function(task) {
-          var error;
           if (!task) {
-            return next(error(403, 'The code was wrong.'));
+            return next(error(400, 'The code was wrong.'));
           }
 
           req.user.complete(task, (err, user) => {
             if (err) {
               return next(err);
             }
-            console.log('COMPLETED', task);
             res.json({...task.toJSON(), completed: true});
           });
         }, next);
