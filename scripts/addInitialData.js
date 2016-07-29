@@ -141,7 +141,7 @@ const chaosQuests = [
   },
   {
     title: 'Herald of Chaos',
-    description: 'Pay your respect for one of the honorable Guests of Honor and take a picture with him. You may share it with the hashtag #RoRorder and/or #ropecon.'
+    description: 'Persuade one of the Guests of Honor to the ways of Chaos and take a picture with him. You may share it with the hashtag #RoRchaos and/or #ropecon.'
   },
   {
     title: 'Chaos: Boss Fight!',

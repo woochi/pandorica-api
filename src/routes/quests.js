@@ -27,7 +27,7 @@ router.param('id', function(req, res, next, id) {
 
 router.route('/')
   .get(function(req, res, next) {
-    Quest.find({faction: {$in: [req.user.faction, NEUTRAL]}}).lean().then(function(quests) {
+    Quest.find({faction: {$in: [req.user.faction, NEUTRAL]}, active: true}).lean().then(function(quests) {
       const userQuests = quests.map((quest) => {
         return getUserQuest(quest, req.user);
       })

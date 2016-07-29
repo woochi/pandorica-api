@@ -11,7 +11,8 @@ var QuestSchema = new mongoose.Schema({
   description: {type: String, required: true},
   code: code,
   points: points,
-  faction: faction
+  faction: faction,
+  active: {type: Boolean, required: true, default: false}
 });
 
 QuestSchema.set('toJSON', {
